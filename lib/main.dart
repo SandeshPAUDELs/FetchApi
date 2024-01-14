@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:device_preview/device_preview.dart'; // Make sure this import is present
+import 'package:device_preview/device_preview.dart'; 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'allUser_page.dart';
 
 void main() {
   runApp(
@@ -58,14 +59,14 @@ class _HomepageState extends State<Homepage> {
         title: Text("API"),
       ),
       body: Center(
-        child: Container(
-          height: hh * 0.2,
-          width: ww * 0.5,
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            height: hh * 0.8,
+            width: ww * 0.8,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: FutureBuilder(
               future: apicall(),
               builder: (context, snapshot) {
@@ -75,12 +76,38 @@ class _HomepageState extends State<Homepage> {
                   return Text("Error: ${snapshot.error}");
                 } else {
                   String name = StringResponse['data']['first_name'];
-                  return Text('$name');
+                  String name1 = StringResponse['data']['last_name'];
+                  String email = StringResponse['data']['email'];
+                  String avatar = StringResponse['data']['avatar'];
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(child: Text('My name is $name $name1')),
+                        SizedBox(child: Text('My email is $email')),
+                        SizedBox(child: Image.network(avatar)),
+                        SizedBox(height: hh * 0.5),
+                        SizedBox(
+                          child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => APICall(),
+                              ),
+                            );
+                          },
+                          child: Text("Click to go to next page"),
+                                                ),
+                        ),],
+                    ),
+                  );
                 }
               },
             ),
           ),
+          
         ),
+        
       ),
     );
   }
