@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'list_resource.dart';
+import 'single_resource.dart';
 
-class APICall extends StatefulWidget {
+class ListResource extends StatefulWidget {
   @override
-  _APICallState createState() => _APICallState();
+  _ListResourceState createState() => _ListResourceState();
 }
-
-class _APICallState extends State<APICall> {
+class _ListResourceState extends State<ListResource> {
   Future<Map<String, dynamic>> fetchData() async {
-    final response = await http.get(Uri.parse('https://reqres.in/api/users'));
+    final response = await http.get(Uri.parse('https://reqres.in/api/unknown'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -18,7 +17,6 @@ class _APICallState extends State<APICall> {
       throw Exception('Failed to load data');
     }
   }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -56,19 +54,16 @@ class _APICallState extends State<APICall> {
                       itemBuilder: (context, index) {
                         var user = users[index];
                           return ListTile(
-                            title: Text('${user['first_name']} ${user['last_name']}'),
+                            title: Text(' ${user['name']}'),
                             subtitle: Column(
                               children: [
                                 Text('ID: ${user['id']}'),
-                                Text('Email: ${user['email']}'),
+                                Text('Year: ${user['year']}'),
+                                Text('Color: ${user['color']}'),
+                                Text('Pantone Value: ${user['pantone_value']}'),
                               ],
                             ),
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage('${user['avatar']}'),
-                            ),
-                            
                           );
-                        
                       },
                     );
                   }
@@ -76,22 +71,18 @@ class _APICallState extends State<APICall> {
               ),
             ),
           ),
-          SizedBox(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ListResource(),
-                  ),
-                );
-              },
-              child: Text('Go to ListResource'),
-            ),
+          SizedBox(height: hh * 0.05,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(context, 
+              MaterialPageRoute(builder: (context) => SingleResource(),
+              ));
+            },
+            child: Text("Click to go to Single Resource"),
+          ),
           ),
         ],
       ),
     );
   }
 }
-
